@@ -1,0 +1,82 @@
+import re
+import glob
+import os
+
+import unicodedata
+from argparse import ArgumentParser
+from pathlib import Path
+from vietnam_number import n2w
+
+import soundfile as sf
+
+from hifigan.mel2wave import mel2wave
+from nat.config import FLAGS
+from nat.text2mel import text2mel
+
+
+
+parser = ArgumentParser()
+parser.add_argument("--path", type=str)
+parser.add_argument("--output", type=str)
+# parser.add_argument("--sample-rate", default=16000, type=int)
+# parser.add_argument("--silence-duration", default=-1, type=float)
+# parser.add_argument("--lexicon-file", default=None)
+args = parser.parse_args()
+
+
+def nat_normalize_text(text):
+    text = unicodedata.normalize("NFKC", text)
+    text = text.lower().strip()
+    sil = FLAGS.special_phonemes[FLAGS.sil_index]
+    text = re.sub(r"[\n.,:]+", f" {sil} ", text)
+    text = text.replace('"', " ")
+    text = re.sub(r"\s+", " ", text)
+    text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
+    text = re.sub("[ ]+", " ", text)
+    text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)
+    temp = re.findall(r'\d+', text)
+    for i in temp:
+        text = text.replace(i,n2w(i))
+    return text.strip()
+
+
+# text = nat_normalize_text(args.text)
+# print("Normalized text input:", text)
+# mel = text2mel(text, args.lexicon_file, args.silence_duration)
+# wave = mel2wave(mel)
+# print("writing output to file", args.output)
+# sf.write(str(args.output), wave, samplerate=args.sample_rate)
+
+
+
+def syntheaudio(path, output, sample_rate, silence_duration, lexicon_file):
+    txt = open(path, "r")
+    text = nat_normalize_text(txt.read())
+    print("Normalized text input:", text)
+    try:
+        mel = text2mel(text, lexicon_file, silence_duration)
+        wave = mel2wave(mel)
+        print("writing output to file", output)
+        sf.write(str(output), wave, samplerate=sample_rate)
+    except ValueError:
+        with open("log_file.txt", "a") as file: #log file error
+            file.write(path[0]+"\n")
+        with open("transcript.txt", "a") as tran:
+            tran.write(txt +"\n")
+            
+
+# path = ['/Users/macos/Desktop/Final_Report/Data/test_slice_data/source/train/4.wav']
+# output = '/Users/macos/Documents/GitHub/vietTTS/assets/infore/clip1.wav'
+sample_rate = 16000
+silence_duration = 0.2
+lexicon_file = '/content/vietTTS/assets/infore/lexicon.txt'
+
+def multisyn(base_path, output):
+    list_path =  sorted([f for f in glob.glob(base_path+"/*.txt")])
+    for i in list_path:
+        print(i)
+        file_name = os.path.basename(i)
+        file = os.path.splitext(file_name)
+        syntheaudio(i, output + '/' + file[0] + '.wav', sample_rate, silence_duration, lexicon_file)
+
+multisyn(args.path, args.output)

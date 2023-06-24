@@ -1,0 +1,11 @@
+LICENSE
+README.md
+setup.cfg
+setup.py
+vietTTS/__init__.py
+vietTTS/synthesizer.py
+vietTTS.egg-info/PKG-INFO
+vietTTS.egg-info/SOURCES.txt
+vietTTS.egg-info/dependency_links.txt
+vietTTS.egg-info/requires.txt
+vietTTS.egg-info/top_level.txt

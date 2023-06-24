@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: vietTTS
+Version: 0.4.1
+Summary: A vietnamese text-to-speech library.
+Home-page: https://github.com/ntt123/vietTTS
+Author: ntt123
+Keywords: text-to-speech,tts,deep-learning,dm-haiku,jax,vietnamese,speech-synthesis
+Requires-Python: >=3.7
+License-File: LICENSE
