@@ -9,9 +9,9 @@ from vietnam_number import n2w
 
 import soundfile as sf
 
-from hifigan.mel2wave import mel2wave
-from nat.config import FLAGS
-from nat.text2mel import text2mel
+from .hifigan.mel2wave import mel2wave
+from .nat.config import FLAGS
+from .nat.text2mel import text2mel
 
 
 
