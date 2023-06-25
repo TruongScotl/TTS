@@ -29,8 +29,8 @@ args = parser.parse_args()
 def nat_normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
     text = text.lower().strip()
-    text = TTSnorm(text)
     sil = FLAGS.special_phonemes[FLAGS.sil_index]
+    text = TTSnorm(text)
     text = re.sub(r"[\n.,:]+", f" {sil} ", text)
     text = text.replace('"', " ")
     text = re.sub(r"\s+", " ", text)
