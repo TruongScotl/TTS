@@ -29,6 +29,7 @@ args = parser.parse_args()
 def nat_normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
     text = text.lower().strip()
+    text = TTSnorm(text)
     sil = FLAGS.special_phonemes[FLAGS.sil_index]
     text = re.sub(r"[\n.,:]+", f" {sil} ", text)
     text = text.replace('"', " ")
@@ -36,7 +37,6 @@ def nat_normalize_text(text):
     text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
     text = re.sub("[ ]+", " ", text)
     text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)
-    text = TTSnorm(text)
     
     temp = re.findall(r'\d+', text)
     for i in temp:
