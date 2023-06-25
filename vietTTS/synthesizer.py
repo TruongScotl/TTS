@@ -66,7 +66,7 @@ def syntheaudio(path, output, sample_rate, silence_duration, lexicon_file):
         with open("log_file.txt", "a") as file: #log file error
             file.write(path[0]+"\n")
         with open("transcript.txt", "a") as tran:
-            tran.write(txt +"\n")
+            tran.write(text +"\n")
             
 
 # path = ['/Users/macos/Desktop/Final_Report/Data/test_slice_data/source/train/4.wav']
