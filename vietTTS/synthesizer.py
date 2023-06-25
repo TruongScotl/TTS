@@ -52,10 +52,11 @@ def nat_normalize_text(text):
 # sf.write(str(args.output), wave, samplerate=args.sample_rate)
 
 
-
 def syntheaudio(path, output, sample_rate, silence_duration, lexicon_file):
     txt = open(path, "r")
-    text = nat_normalize_text(txt.read())
+    file_name = os.path.basename(path)
+    raw_text = txt.read()
+    text = nat_normalize_text(raw_text)
     print("Normalized text input:", text)
     try:
         mel = text2mel(text, lexicon_file, silence_duration)
@@ -64,7 +65,7 @@ def syntheaudio(path, output, sample_rate, silence_duration, lexicon_file):
         sf.write(str(output), wave, samplerate=sample_rate)
     except ValueError:
         with open("log_file.txt", "a") as file: #log file error
-            file.write(file_name+ "|" + text + "\n")
+            file.write(file_name+ "|" + raw_text + "\n")
             
 
 # path = ['/Users/macos/Desktop/Final_Report/Data/test_slice_data/source/train/4.wav']
