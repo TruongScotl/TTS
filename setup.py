@@ -16,7 +16,7 @@ install_requires = [
     "textgrid @ git+https://github.com/kylebgorman/textgrid.git",
     "tqdm",
     "matplotlib",
-    "vietnam-number"
+    "vietnam-number",
     "vinorm"
 ]
 setup_requires = []
