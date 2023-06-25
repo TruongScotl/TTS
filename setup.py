@@ -17,6 +17,7 @@ install_requires = [
     "tqdm",
     "matplotlib",
     "vietnam-number"
+    "vinorm"
 ]
 setup_requires = []
 tests_require = []
