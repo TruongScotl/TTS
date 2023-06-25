@@ -64,9 +64,7 @@ def syntheaudio(path, output, sample_rate, silence_duration, lexicon_file):
         sf.write(str(output), wave, samplerate=sample_rate)
     except ValueError:
         with open("log_file.txt", "a") as file: #log file error
-            file.write(path[0]+"\n")
-        with open("transcript.txt", "a") as tran:
-            tran.write(text +"\n")
+            file.write(file_name+ "|" + text + "\n")
             
 
 # path = ['/Users/macos/Desktop/Final_Report/Data/test_slice_data/source/train/4.wav']
