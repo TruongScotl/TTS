@@ -5,9 +5,7 @@ import os
 import unicodedata
 from argparse import ArgumentParser
 from pathlib import Path
-from vietnam_number import n2w
 from vinorm import TTSnorm
-
 
 import soundfile as sf
 
@@ -25,23 +23,25 @@ parser.add_argument("--output", type=str)
 # parser.add_argument("--lexicon-file", default=None)
 args = parser.parse_args()
 
+with open("phonetic.pkl","rb") as f:
+  mapping = pickle.load(f)
 
 def nat_normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
     text = text.lower().strip()
     sil = FLAGS.special_phonemes[FLAGS.sil_index]
     text = TTSnorm(text)
-    text = re.sub(r"[\n.,:]+", f" {sil} ", text)
     text = text.replace('"', " ")
+    text = re.sub(r"[\n.,:]+", f" {sil} ", text)
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
     text = re.sub("[ ]+", " ", text)
     text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)
     
-    temp = re.findall(r'\d+', text)
-    for i in temp:
-        text = text.replace(i,n2w(i))
-    return text.strip()
+    ls = list(text.split(" "))
+    M = (pd.Series(ls)).replace(mapping)
+    text = ' '.join(list(M))
+    return text
 
 
 # text = nat_normalize_text(args.text)
