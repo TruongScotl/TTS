@@ -34,6 +34,7 @@ with open("exception.pkl","rb") as f:
 def nat_normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
     sil = FLAGS.special_phonemes[FLAGS.sil_index]
+    text = re.sub(r"[\n.,:]+", f" {sil} ", text)
   
     ls = list(text.split(" "))
     M = (pd.Series(ls)).replace(dict)
@@ -41,7 +42,6 @@ def nat_normalize_text(text):
   
     text = TTSnorm(text)
     text = text.replace('"', " ")
-    text = re.sub(r"[\n.,:]+", f" {sil} ", text)
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
     text = re.sub("[ ]+", " ", text)
@@ -51,7 +51,19 @@ def nat_normalize_text(text):
     ls = list(text.split(" "))
     M = (pd.Series(ls)).replace(mapping)
     text = ' '.join(list(M))
-    return text
+  
+    return text.strip()
+
+
+text = unicodedata.normalize("NFKC", text)
+text = text.lower().strip()
+text = re.sub(r"[\n.,:]+", f" {sil} ", text)
+text = text.replace('"', " ")
+text = re.sub(r"\s+", " ", text)
+text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
+text = re.sub("[ ]+", " ", text)
+text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)
+return text.strip()
 
 
 # text = nat_normalize_text(args.text)
