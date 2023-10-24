@@ -28,18 +28,26 @@ args = parser.parse_args()
 with open("phonetic.pkl","rb") as f:
   mapping = pickle.load(f)
 
+with open("exception.pkl","rb") as f:
+  dict = pickle.load(f)
+  
 def nat_normalize_text(text):
     text = unicodedata.normalize("NFKC", text)
-    text = text.lower().strip()
     sil = FLAGS.special_phonemes[FLAGS.sil_index]
+  
+    ls = list(text.split(" "))
+    M = (pd.Series(ls)).replace(dict)
+    text = ' '.join(list(M))
+  
     text = TTSnorm(text)
     text = text.replace('"', " ")
     text = re.sub(r"[\n.,:]+", f" {sil} ", text)
     text = re.sub(r"\s+", " ", text)
     text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
     text = re.sub("[ ]+", " ", text)
-    text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)
-    
+    text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)  
+    text = text.lower().strip()
+  
     ls = list(text.split(" "))
     M = (pd.Series(ls)).replace(mapping)
     text = ' '.join(list(M))
