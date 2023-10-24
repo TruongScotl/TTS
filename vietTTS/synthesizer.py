@@ -55,17 +55,6 @@ def nat_normalize_text(text):
     return text.strip()
 
 
-text = unicodedata.normalize("NFKC", text)
-text = text.lower().strip()
-text = re.sub(r"[\n.,:]+", f" {sil} ", text)
-text = text.replace('"', " ")
-text = re.sub(r"\s+", " ", text)
-text = re.sub(r"[.,:;?!]+", f" {sil} ", text)
-text = re.sub("[ ]+", " ", text)
-text = re.sub(f"( {sil}+)+ ", f" {sil} ", text)
-return text.strip()
-
-
 # text = nat_normalize_text(args.text)
 # print("Normalized text input:", text)
 # mel = text2mel(text, args.lexicon_file, args.silence_duration)
